@@ -1,0 +1,50 @@
+{
+  "status": "active",
+  "pid": "91XqmW",
+  "createdAt": 1712396194222,
+  "orientation": "landscape",
+  "name": "Gaze 좌표가 안맞는다",
+  "post_password": "4012",
+  "assets": [
+    {
+      "image": {
+        "layout": {
+          "col": 2,
+          "row": 1
+        },
+        "imageBlocks": [
+          {
+            "imageProperties": {
+              "align": "center",
+              "scaleType": "full-screen"
+            },
+            "key": "assets/08160421-83f2-483d-b258-9ce53106f53a/eda90d27-b37c-44fc-b0be-b879a81b54e5/3c5e5602-46d0-4895-8ae1-19094593e2db.jpeg",
+            "id": "3c5e5602-46d0-4895-8ae1-19094593e2db"
+          },
+          {
+            "imageProperties": {
+              "align": "center",
+              "scaleType": "full-screen"
+            },
+            "key": "assets/08160421-83f2-483d-b258-9ce53106f53a/eda90d27-b37c-44fc-b0be-b879a81b54e5/cf490bff-5a56-4296-bac0-cb4257041440.jpeg",
+            "id": "cf490bff-5a56-4296-bac0-cb4257041440"
+          }
+        ],
+        "timerProperties": {
+          "method": "strict",
+          "timer": 10
+        }
+      },
+      "assetType": "image",
+      "id": "eda90d27-b37c-44fc-b0be-b879a81b54e5"
+    }
+  ],
+  "cost": 1,
+  "target": 100,
+  "updatedAt": 1712396247606,
+  "owner": "842bbc25-6e33-4885-944c-89709e4e7d4e",
+  "description": "",
+  "id": "08160421-83f2-483d-b258-9ce53106f53a",
+  "participant": 2,
+  "tags": []
+}

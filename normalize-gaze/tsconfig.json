@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "esnext", // 더 최신의 ECMAScript 버전을 타겟으로 합니다.
+    "lib": [
+      "esnext", // 최신 ECMAScript 기능을 사용할 수 있도록 합니다.
+      "dom" // 웹 브라우저의 DOM에 대한 기능을 사용할 수 있도록 합니다.
+    ],
+    "module": "commonjs", // Node.js 환경을 위한 모듈 시스템을 지정합니다.
+    "esModuleInterop": true, // CommonJS 모듈을 ES2015+ 모듈과 보다 쉽게 사용할 수 있게 합니다.
+    "forceConsistentCasingInFileNames": true, // 파일 이름의 대소문자 일관성을 강제합니다.
+    "strict": true, // 모든 엄격한 타입 검사 옵션을 활성화합니다.
+    "skipLibCheck": true, // 모든 .d.ts 파일에 대한 타입 체크를 생략합니다.
+    "resolveJsonModule": true
+  },
+  "include": ["src"]
+}

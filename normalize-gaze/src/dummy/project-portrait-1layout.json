@@ -1,0 +1,42 @@
+{
+  "status": "active",
+  "pid": "xaHj6J",
+  "createdAt": 1712378520214,
+  "orientation": "portrait",
+  "name": "Gaze 좌표가 안맞는다",
+  "post_password": "8859",
+  "assets": [
+    {
+      "image": {
+        "layout": {
+          "col": 1,
+          "row": 1
+        },
+        "imageBlocks": [
+          {
+            "imageProperties": {
+              "align": "center",
+              "scaleType": "full-screen"
+            },
+            "key": "assets/1b16c48b-eee5-47e4-aacc-e7311696ee0a/8386b2e2-2f8d-4d5a-a3c4-322b7366976b/29ae8e63-3bca-4780-ac92-2d1fdc6298d9.jpeg",
+            "id": "29ae8e63-3bca-4780-ac92-2d1fdc6298d9"
+          }
+        ],
+        "timerProperties": {
+          "method": "strict",
+          "timer": 10
+        }
+      },
+      "assetType": "image",
+      "id": "8386b2e2-2f8d-4d5a-a3c4-322b7366976b"
+    }
+  ],
+  "cost": 1,
+  "target": 100,
+  "updatedAt": 1712378595414,
+  "owner": "842bbc25-6e33-4885-944c-89709e4e7d4e",
+  "description": "",
+  "id": "1b16c48b-eee5-47e4-aacc-e7311696ee0a",
+  "participant": 2,
+  "tags": []
+}
