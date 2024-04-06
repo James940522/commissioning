@@ -110,6 +110,45 @@ export function determineLayout(
   }
 }
 
+export function calculateGaps(
+  layouts: Rect[][],
+  rects: Rect[][],
+): { x: number; y: number }[][] {
+  const gaps: { x: number; y: number }[][] = [];
+
+  layouts.forEach((layoutRow, rowIndex) => {
+    const rowGaps: { x: number; y: number }[] = [];
+    layoutRow.forEach((layoutItem, itemIndex) => {
+      const rectItem = rects[rowIndex][itemIndex];
+      // x와 y 좌표 사이의 gap을 계산하고 배열에 추가합니다.
+      const xGap = layoutItem.x - rectItem.x;
+      const yGap = layoutItem.y - rectItem.y;
+      rowGaps.push({
+        x: xGap,
+        y: yGap,
+      });
+    });
+    gaps.push(rowGaps);
+  });
+
+  return gaps;
+}
+
+export const findLayoutIndex = (
+  currentLayouts: Rect[],
+  point: { x: number; y: number },
+) => {
+  const layoutIndex = currentLayouts.findIndex(
+    layout =>
+      point.x >= layout.x &&
+      point.x <= layout.x + layout.w &&
+      point.y >= layout.y &&
+      point.y <= layout.y + layout.h,
+  );
+
+  return layoutIndex;
+};
+
 const cols2Rows1: Rect[] = [
   {
     x: 5,
