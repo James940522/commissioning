@@ -14,37 +14,28 @@ app.use(
   }),
 );
 
-// 페이지 렌더링 처리
 app.post('/render', async (req, res) => {
   const { url, userAgent, size } = req.body;
 
-  try {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
+  const browser = await puppeteer.launch();
 
-    // 뷰포트 설정
-    await page.setViewport({
-      width: size.width,
-      height: size.height,
-      deviceScaleFactor: 1,
-    });
+  const page = await browser.newPage();
+  //   await page.setUserAgent(
+  //     'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1',
+  //   );
+  await page.setUserAgent(userAgent);
+  await page.goto(url, {
+    waitUntil: 'networkidle2',
+  });
 
-    await page.setUserAgent(userAgent);
-    await page.goto(url, { waitUntil: 'networkidle0' });
+  await page.evaluate(size => {
+    document.body.style.width = `${size.width}px`;
+    document.body.style.height = `${size.height}px`;
+  }, size);
 
-    // 페이지 내에서 CSS를 조정하여 원하는 크기로 강제 설정
-    await page.evaluate(size => {
-      document.body.style.width = `${size.width}px`;
-      document.body.style.height = `${size.height}px`;
-    }, size);
-
-    const content = await page.content();
-    await browser.close();
-    res.send({ html: content });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Failed to render the page');
-  }
+  const content = await page.content();
+  await browser.close();
+  res.send(content);
 });
 
 app.listen(PORT, () => {
