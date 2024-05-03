@@ -1,0 +1,19 @@
+{
+  "name": "protopie-layout",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "puppeteer": "^22.7.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
