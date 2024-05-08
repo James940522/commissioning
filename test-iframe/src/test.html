@@ -1,0 +1,262 @@
+<!-- <script>
+  // var originalXHR = window.XMLHttpRequest;
+
+  // function CustomXHR() {
+  //     var xhr = new originalXHR();
+
+  //     xhr.onreadystatechange = function() {
+  //         if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 304)) {
+  //             var contentType = xhr.getResponseHeader("Content-Type");
+  //             if (contentType && contentType.includes("image/svg+xml")) {
+  //                 console.log("SVG 요청이 감지되었습니다:", xhr.responseURL);
+  //             }
+  //         }
+  //     };
+
+  //     return xhr;
+  // }
+
+  // window.XMLHttpRequest = CustomXHR;
+
+  // MutationObserver를 document에 연결
+
+  // const test = (code) => {
+  //   eval(code);
+  // }
+
+  // window.postmessage = test
+
+  // window.onmessage = function(arg){
+  //   console.log('callFromIframe2', arg)
+  // }
+  const evalFunction = function (arg) {
+    console.log('Test-arg', arg);
+  };
+
+  const targetElement = Array.from(
+    document.querySelectorAll('div[data-layer-id]'),
+  ).filter(el => el.dataset.layerId === ${dataLayerId});
+  console.log('TEST_TEST', targetElement);
+  targetElement.forEach(element => {
+    element.style.border = '1px solid black';
+  });
+
+  window.addEventListener('message', e => {
+    console.log('TEST_TEST', e.data);
+    eval(e.data);
+  });
+
+  window.addEventListener('message', e => console.log('asdasd', e));
+
+  const test = "console.log('iframe')";
+  window.parent.postMessage(test, '*');
+
+  const evalFunction = function (arg) {
+    console.log('Test-arg', arg);
+  };
+
+  // window.onmessage =
+  // window.addEventListner('message', (e) => console.log('asdasd',e));
+
+  const test = "console.log('iframe')";
+  window.parent.postMessage(test, '*');
+
+  // MutationObserver 생성
+  var observer2 = new MutationObserver(function (mutationsList) {
+    mutationsList.forEach(function (mutation) {
+      if (mutation.type === 'childList') {
+        console.log('mutation1', mutation);
+
+        mutation.addedNodes.forEach(function (node) {
+          if (node.innerHTML)
+            if (node.innerHTML.indexOf('https://cloud-data.protopie.io') > -1) {
+              console.log('mutation 새로운 inner가 추가되었습니다3:', node);
+
+              // let obj = JSON.parse(JSON.stringify(node));
+              window.parent.postMessage(node.innerHTML, '*');
+
+              // window.parent.callFromIframe(node);
+
+              // var newURL = "https://proxy.seesolabs.com";
+
+              // // 정규 표현식을 사용하여 URL 값 변경
+              // const newInnerHtml = node.innerHTML.replace("\/(https:\/\/cloud-data.protopie.io)\/\g\", function(match, p1, p2) {
+              //   return newURL + p2 + "?host=https://cloud-data.protopie.io";
+              // });
+              // node.innerHTML = newInnerHtml;
+            }
+          if (node.tagName === 'IMG') {
+            // const originSrc = node.src;
+            // const newURL = "https://proxy.seesolabs.com";
+            // const newSrc = originSrc.replace('cloud-data.protopie.io', 'proxy.seesolabs.com') + '&host=https://cloud-data.protopie.io';
+            // node.src = newSrc;
+            console.log('mutation 새로운 이미지가 추가되었습니다3:', node);
+            // window.parent.callFromIframe(node);
+            // let obj = JSON.parse(JSON.stringify(node));
+            window.parent.postMessage(node.innerHTML, '*');
+          }
+          if (node.tagName === 'SVG') {
+            // const originSrc = node.src;
+            // const newURL = "https://proxy.seesolabs.com";
+            // const newSrc = originSrc.replace('cloud-data.protopie.io', 'proxy.seesolabs.com') + '&host=https://cloud-data.protopie.io';
+            // node.src = newSrc;
+            console.log('mutation 새로운 SVG 추가되었습니다3:', node);
+            // window.parent.callFromIframe(node);
+            let obj = JSON.parse(JSON.stringify(node));
+            // window.parent.postMessage(node.innerHTML, "*")
+          }
+        });
+      } else {
+        console.log('mutation2', mutation);
+      }
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    observer2.observe(document.body, { childList: true, subtree: true });
+  });
+  // MutationObserver를 body 요소에 연결
+
+  //  // MutationObserver 생성
+  //  var observer = new MutationObserver(function(mutationsList) {
+  //      mutationsList.forEach(function(mutation) {
+  //          if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
+  //              console.log('src 속성이 변경되었습니다.');
+  //              // 변경된 src 속성 값 출력
+  //              console.log('새로운 src:', targetElement.src);
+  //          }
+  //      });
+  //  });
+  // //  var targetElement = document.getElementById('example');
+
+  //  var imgElements = document.getElementsByTagName('img');
+
+  //   // imgElements를 배열로 변환하여 처리하거나 반복할 수 있습니다.
+  //   // 예를 들어, 콘솔에 모든 img 요소의 src 속성 값을 출력하는 방법은 다음과 같습니다.
+  //   for (var i = 0; i < imgElements.length; i++) {
+  //       observer.observe(imgElements[i], { attributes: true });
+  //   }
+
+  // MutationObserver를 특정 HTML 요소에 연결
+
+  // var originalAppendChild = document.head.appendChild;
+
+  // // appendChild 메서드 재정의
+  // document.head.appendChild = function(newChild) {
+  //     console.log("Appending a child to the document head:", newChild);
+
+  //   if (newChild.tagName === 'SCRIPT' && newChild.src) {
+  //       console.log("Original src attribute:", newChild.src);
+
+  //       const originSrc = newChild.src;
+  //       const newURL = "https://proxy.seesolabs.com";
+  //       const newSrc = originSrc.replace('static.protopie.io', 'proxy.seesolabs.com') + '?host=https://static.protopie.io';
+  //       newChild.src = newSrc;
+
+  //       console.log("New src attribute:", newChild.src);
+
+  //   }
+
+  //   return originalAppendChild.apply(this, arguments);
+  // };
+
+  const { fetch: originalFetch } = window;
+
+  window.fetch = async (...args) => {
+    let [resource, config] = args;
+    if (resource) {
+      console.log('fetch 요청이 감지되었습니다.', resource);
+
+      if (resource.url) {
+        // if(resource.url.indexOf('cloud-data') > -1 || resource.url.indexOf('static.protopie') > -1 ){
+        if (resource.url.indexOf('cloud-data') > -1) {
+          const protocol = resource.url.split('//')[0] + '//';
+          const host = resource.url.split('//')[1].split('/')[0];
+
+          const path = resource.url.split('//')[1].replace(host, '');
+
+          let isPathContainQuery = false;
+
+          if (path.indexOf('?') > -1) {
+            isPathContainQuery = true;
+          }
+
+          console.log('DEBUG', protocol, host, path);
+
+          let url = '';
+          if (isPathContainQuery) {
+            url =
+              'https://proxy.seesolabs.com' + path + '&host=' + protocol + host;
+          } else {
+            url =
+              'https://proxy.seesolabs.com' + path + '?host=' + protocol + host;
+          }
+
+          console.log('url', url);
+
+          const modifiedRequest = new Request(url, {
+            method: resource.method,
+            headers: resource.headers,
+            body: resource.body,
+            redirect: 'manual', // 리디렉션 방지
+          });
+
+          const response = await originalFetch(modifiedRequest, config);
+
+          return response;
+
+          // const newHeaders = new Headers();
+          // newHeaders.set('Content-Type', 'application/json');
+          // const dummyResponse = new Response(JSON.stringify(json), {
+          //     status: 200,
+          //     statusText: "",
+          //     headers: newHeaders
+          // })
+          // return dummyResponse
+        }
+      }
+    }
+
+
+
+
+    const response = await originalFetch(resource, config);
+    // response interceptor here
+    console.log('response', response);
+    return response;
+  };
+
+  // async function loadSeeso(){
+  //   const Seeso = await importUMD('https://seeso-js-cdn.s3.ap-northeast-2.amazonaws.com/no-filter/seeso.js');
+
+  //   console.log(Seeso);
+  // }
+
+  // loadSeeso();
+</script> -->
+<script>
+  setTimeout(() => {
+    const htmlDivList = document.querySelectorAll('div[data-layer-id]');
+    const targetElement = Array.from(htmlDivList).filter(
+      el => el.dataset.layerId === '${dataLayerId}',
+    );
+    console.log('IFRAME_TEST', targetElement);
+    targetElement.forEach(element => {
+      element.style.border = '5px solid red';
+      let start = null;
+      function step(timestamp) {
+        if (!start) start = timestamp;
+        const progress = timestamp - start;
+        element.style.transform =
+          'translateY(' + Math.sin(progress / 100) * 1 + 'px)';
+        if (progress < 1000) {
+          window.requestAnimationFrame(step);
+        } else {
+          start = null; // Reset start time to repeat the animation
+          window.requestAnimationFrame(step);
+        }
+      }
+      window.requestAnimationFrame(step);
+    });
+  }, 3000);
+</script>
