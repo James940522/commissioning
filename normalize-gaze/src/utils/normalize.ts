@@ -24,6 +24,7 @@ import {
 
 const METHOD = 'LocalMax';
 
+//! @@@@@@@@@@@@@@@@ 실패작 코드 @@@@@@@@@@@@@@@@
 /**
  *
  * canvas는 프론트에서 하드하게 정해놓은 screen size임

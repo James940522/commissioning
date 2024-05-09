@@ -69,7 +69,12 @@ export function determineLayout(
   if (rects.length === 1) {
     throw new Error('Rects must have more than one element.');
   }
+
   console.log('rects', rects);
+
+  const firstRect = rects[0];
+  const secondRect = rects[1];
+
   // 화면의 너비와 높이를 최대한 활용하는 Rect를 찾음
   const maxWidth = Math.max(...rects.map(rect => rect.x + rect.w));
   const maxHeight = Math.max(...rects.map(rect => rect.y + rect.h));

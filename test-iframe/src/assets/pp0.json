@@ -31680,9 +31680,9 @@
     {
       "timestamp": 1715140812765,
       "url": "https://proxy.megapass-dashboard.com/p/aac5c7bd3f",
-      "path": "temp_path",
-      "dataLayerId": "",
-      "dataLayerName": ""
+      "path": "d9e2676e-b617-4dd6-9e28-de084dbd800e",
+      "dataLayerId": "8e3a1681-85fd-45cd-8ab6-3fbc4b190efc",
+      "dataLayerName": "BG"
     },
     {
       "timestamp": 1715140812898,
@@ -31969,7 +31969,7 @@
       "url": "https://proxy.megapass-dashboard.com/p/aac5c7bd3f",
       "path": "temp_path",
       "dataLayerId": "05a2bb19-89fb-4c4d-9f24-21cda944e01d",
-      "dataLayerName": "Categories"
+      "dataLayerName": "BG"
     },
     {
       "timestamp": 1715140831274,

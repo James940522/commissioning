@@ -11,65 +11,86 @@ function App() {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
   const findElement = () => {
-    if (!iframeRef.current) {
+    const iframeElement = iframeRef.current;
+
+    if (!iframeElement) return;
+
+    if (!iframeElement) {
       console.log(
         'Test iframe is not loaded yet or cross-origin policy prevents access',
       );
       return;
     }
-    const test = `
-      setTimeout(() => {
-        const htmlDivList = document.querySelectorAll('div[data-layer-id]');
-        const targetElement = Array.from(htmlDivList).filter(
-          el => el.dataset.layerId === '${dataLayerId}',
-        );
-        console.log('IFRAME_TEST', targetElement);
-        targetElement.forEach(element => {
-          element.style.border = '5px solid red';
-          let start = null;
-          function step(timestamp) {
-            if (!start) start = timestamp;
-            const progress = timestamp - start;
-            element.style.transform =
-              'translateY(' + Math.sin(progress / 100) * 1 + 'px)';
-            if (progress < 1000) {
-              window.requestAnimationFrame(step);
-            } else {
-              start = null; // Reset start time to repeat the animation
-              window.requestAnimationFrame(step);
-            }
-          }
-          window.requestAnimationFrame(step);
-        });
-      }, 5000);
-    `;
 
-    iframeRef.current.contentWindow?.postMessage(
-      test,
-      'https://proxy.megapass-dashboard.com',
-    );
+    if (iframeElement.contentWindow) {
+      const customScript = `
+
+      `;
+
+      // const test = `
+      // let targetElemnt;
+      // while (!tagetElement){
+      //   const htmlDivList = document.querySelectorAll('div[data-layer-id]');
+      //   targetElement = Array.from(htmlDivList).filter(
+      //     el => el.dataset.layerId === '${dataLayerId}',
+      //   );
+      // }
+      //   targetElement || window.postmesage("" , "나 실패함 ㅋㅋ ");
+      //   console.log('IFRAME_TEST', targetElement);
+      //   targetElement.forEach(element => {
+      //     element.style.border = '5px solid red';
+      //   });
+      //   `;
+
+      iframeElement.contentWindow.postMessage(
+        customScript,
+        'https://proxy.megapass-dashboard.com',
+      );
+    }
   };
 
   useEffect(() => {
-    // iframe이 로드되었는지 확인 후 요소 탐색
-    const handleLoad = () => {
-      findElement();
-    };
+    window.addEventListener('message', event => {
+      console.log;
+      // console.log('event', typeof event.data, event.data);
 
-    const iframe = iframeRef.current;
+      if (typeof event.data === 'string' && event.data.includes('datajson')) {
+        const { data } = event;
 
-    if (iframe) {
-      setTimeout(findElement, 10000);
-      // iframe.addEventListener('load', handleLoad);
-    }
+        console.log('event', data.replace('datajson', ''));
+        const map: Record<string, string> = {};
+        const scenes = JSON.parse(data.replace('datajson', ''));
 
-    // 이벤트 리스너 정리
-    return () => {
-      if (iframe) {
-        iframe.removeEventListener('load', handleLoad);
+        scenes.forEach((item: any) => {
+          item.layers.forEach((layer: any) => {
+            map[layer.id] = item.id;
+          });
+        });
+        console.log('map', map);
+        // console.log('event', event.data);
       }
-    };
-  }, [iframeRef]); // iframeRef가 변경될 때마다 useEffect 실행
+    });
+  }, []);
+
+  // useEffect(() => {
+  //   const iframe = iframeRef.current;
+  //   if (!iframe) return;
+  //   // iframe이 로드되었는지 확인 후 요소 탐색
+  //   const handleLoad = () => {
+  //     findElement(iframe);
+  //   };
+
+  //   if (iframe) {
+  //     iframe.addEventListener('load', handleLoad);
+  //   }
+
+  //   // 이벤트 리스너 정리
+  //   return () => {
+  //     if (iframe) {
+  //       iframe.removeEventListener('load', handleLoad);
+  //     }
+  //   };
+  // }, [iframeRef]); // iframeRef가 변경될 때마다 useEffect 실행
 
   return (
     <main className="w-screen h-screen flex justify-center items-center">
@@ -80,6 +101,8 @@ function App() {
               ref={iframeRef}
               src={`${protoPieUrl}&sceneId=${sceneId}`}
               className="w-full h-full"
+              onLoad={findElement}
+              // onLoadStart={}
             />
           </div>
           <div className="flex gap-2 border border-zinc-500 p-3 flex-wrap w-full">
