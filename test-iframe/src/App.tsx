@@ -67,26 +67,6 @@ function App() {
     });
   }, []);
 
-  // useEffect(() => {
-  //   const iframe = iframeRef.current;
-  //   if (!iframe) return;
-  //   // iframe이 로드되었는지 확인 후 요소 탐색
-  //   const handleLoad = () => {
-  //     findElement(iframe);
-  //   };
-
-  //   if (iframe) {
-  //     iframe.addEventListener('load', handleLoad);
-  //   }
-
-  //   // 이벤트 리스너 정리
-  //   return () => {
-  //     if (iframe) {
-  //       iframe.removeEventListener('load', handleLoad);
-  //     }
-  //   };
-  // }, [iframeRef]); // iframeRef가 변경될 때마다 useEffect 실행
-
   return (
     <main className="w-screen h-screen flex justify-center items-center">
       <div className="w-full max-w-[1080px]">

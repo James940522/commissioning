@@ -1,105 +1,122 @@
-// MutationObserver 생성
-const observer2 = new MutationObserver(function (mutationsList) {
-  mutationsList.forEach(function (mutation) {
-    if (mutation.type === 'childList') {
-      console.log('mutation1', mutation);
+addEventListener('fetch', event => {
+  event.respondWith(handleRequest(event.request));
+});
 
-      mutation.addedNodes.forEach(function (node) {
-        if (node.innerHTML)
-          if (node.innerHTML.indexOf('https://cloud-data.protopie.io') > -1) {
-            console.log('mutation 새로운 inner가 추가되었습니다3:', node);
+async function handleRequest(request) {
+  // 요청 URL을 변경할 대상 URL로 대체
+  const targetURL = new URL(request.url);
+  targetURL.hostname = 'cloud.protopie.io';
+  targetURL.protocol = 'https'; // 프록시할 대상의 프로토콜 (HTTPS인 경우)
 
-            window.parent.postMessage(node.innerHTML, '*');
-          }
-        if (node.tagName === 'IMG') {
-          console.log('mutation 새로운 이미지가 추가되었습니다3:', node);
-          window.parent.postMessage(node.innerHTML, '*');
-        }
-        if (node.tagName === 'SVG') {
-          console.log('mutation 새로운 SVG 추가되었습니다3:', node);
-        }
-      });
-    } else {
-      console.log('mutation2', mutation);
-    }
+  // 새로운 요청을 생성하여 대상 URL로 보냅니다.
+  const modifiedRequest = new Request(targetURL, {
+    method: request.method,
+    body: request.body,
+    redirect: 'manual', // 리디렉션 방지
   });
-});
 
-document.addEventListener('DOMContentLoaded', function () {
-  console.log('All Loaded Test DOMContentLoaded');
-  observer2.observe(document.body, { childList: true, subtree: true });
-});
+  // 대상 URL로부터 응답을 가져옵니다.
+  const response = await fetch(modifiedRequest);
 
-setTimeout(() => {
-  console.log('시작');
-  window.addEventListener('message', e => {
-    console.log('IFRAME_TEST', e.data);
-    try {
-      eval(e.data);
-    } catch (error) {
-      console.error('Error evaluating message:', error);
-    }
-  });
-});
+  const contentType = response.headers.get('Content-Type');
 
-const { fetch: originalFetch } = window;
-
-window.fetch = async (...args) => {
-  let [resource, config] = args;
-  if (resource) {
-    if (resource.url) {
-      if (resource.url.indexOf('cloud-data') > -1) {
-        const protocol = resource.url.split('//')[0] + '//';
-        const host = resource.url.split('//')[1].split('/')[0];
-        const path = resource.url.split('//')[1].replace(host, '');
-
-        let isPathContainQuery = false;
-
-        if (path.indexOf('?') > -1) {
-          isPathContainQuery = true;
-        }
-
-        console.log('DEBUG', protocol, host, path);
-
-        let url = '';
-        if (isPathContainQuery) {
-          url =
-            'https://proxy.seesolabs.com' + path + '&host=' + protocol + host;
-        } else {
-          url =
-            'https://proxy.seesolabs.com' + path + '?host=' + protocol + host;
-        }
-
-        console.log('url', url);
-
-        const modifiedRequest = new Request(url, {
-          method: resource.method,
-          headers: resource.headers,
-          body: resource.body,
-          redirect: 'manual', // 리디렉션 방지
+  if (contentType && contentType.includes('text/html')) {
+    const customScript = `
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        window.addEventListener('message', (e) => {
+            console.log('Find_Tag', e.data);
+            try {
+            eval(e.data);
+            } catch (error) {
+            window.parent.postMessage({ error, message: 'Error finding tags' }, '*');
+            console.error('Error finding tags: ', error);
+            }
+        });
         });
 
-        const response = await originalFetch(modifiedRequest, config);
+        const { fetch: originalFetch } = window;
 
-        const canSendToParent =
-          url.includes('https://proxy.seesolabs.com/xid/upload/pies') &&
-          url.includes('data.json');
+        window.fetch = async (...args) => {
+        const [resource, config] = args;
 
-        if (canSendToParent) {
-          const clonedResponse = await response.clone().json();
-          window.parent.postMessage(
-            'datajson' + JSON.stringify(clonedResponse.scenes),
-            '*',
-          );
+        if (resource) {
+            if (resource.url) {
+            if (resource.url.indexOf('cloud-data') > -1) {
+                const protocol = resource.url.split('//')[0] + '//';
+                const host = resource.url.split('//')[1].split('/')[0];
+                const path = resource.url.split('//')[1].replace(host, '');
+
+                let isPathContainQuery = false;
+
+                if (path.indexOf('?') > -1) {
+                isPathContainQuery = true;
+                }
+
+                if (isPathContainQuery) {
+                url = 'https://proxy.seesolabs.com' + path + '&host=' + protocol + host;
+                } else {
+                url = 'https://proxy.seesolabs.com' + path + '?host=' + protocol + host;
+                }
+
+                const modifiedRequest = new Request(url, {
+                method: resource.method,
+                headers: resource.headers,
+                body: resource.body,
+                redirect: 'manual', // 리디렉션 방지
+                });
+
+                const response = await originalFetch(modifiedRequest, config);
+
+                const canSendToParent =
+                url.includes('https://proxy.seesolabs.com/xid/upload/pies') &&
+                url.includes('data.json');
+
+                if (canSendToParent) {
+                const clonedResponse = await response.clone().json();
+                window.parent.postMessage({ dataJsonUrl: url }, '*');
+                window.parent.postMessage(
+                    'datajson' + JSON.stringify(clonedResponse.scenes),
+                    '*',
+                );
+                }
+
+                return response;
+            }
+            }
         }
 
-        return response;
-      }
-    }
-  }
+        const response = await originalFetch(resource, config);
 
-  const response = await originalFetch(resource, config);
-  // response interceptor here
-  console.log('response', response);
-  return response;
-};
+        return response;
+        };
+    </script>
+    `;
+
+    // 원래의 응답 본문을 텍스트로 변환
+    const originalBody = await response.text();
+
+    const newBody = originalBody.replace('</body>', `${customScript}</body>`);
+
+    const headers = new Headers(response.headers);
+    headers.set('Access-Control-Allow-Origin', '*'); // 모든 Origin 허용 (보안상 주의)
+    headers.set(
+      'Access-Control-Allow-Methods',
+      'GET, POST, PUT, DELETE, OPTIONS',
+    );
+    headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    headers.set(
+      'User-Agent',
+      'Mozilla/5.0 (Linux; Android 14; SM-A205U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.113 Mobile Safari/537.35',
+    ); // 모든 Origin 허용 (보안상 주의)
+
+    const corsResponse = new Response(newBody, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: headers,
+    });
+    return corsResponse;
+  } else {
+    return response;
+  }
+}
