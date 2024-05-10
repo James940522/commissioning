@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // import './App.css';
 import { useEffect, useRef, useState } from 'react';
 import scene from './assets/scene.json';
@@ -23,24 +24,21 @@ function App() {
     }
 
     if (iframeElement.contentWindow) {
+      //TODO: TargetElement를 찾을때 까지 반복해서 select
       const customScript = `
-
+      const intervalId = setInterval(() => {
+        
+        const htmlDivList = document.querySelectorAll('div[data-layer-id]');
+        const targetElement = Array.from(htmlDivList).find(
+          el => el.dataset.layerId === '${dataLayerId}'
+        );
+        console.log('IFRAME_TEST 찾는중', targetElement);
+        if (targetElement) {
+          targetElement.style.border = '5px solid red';
+          clearInterval(intervalId); // 찾았으면 인터벌 중지
+        }
+      }, 500); // 500ms 마다 실행
       `;
-
-      // const test = `
-      // let targetElemnt;
-      // while (!tagetElement){
-      //   const htmlDivList = document.querySelectorAll('div[data-layer-id]');
-      //   targetElement = Array.from(htmlDivList).filter(
-      //     el => el.dataset.layerId === '${dataLayerId}',
-      //   );
-      // }
-      //   targetElement || window.postmesage("" , "나 실패함 ㅋㅋ ");
-      //   console.log('IFRAME_TEST', targetElement);
-      //   targetElement.forEach(element => {
-      //     element.style.border = '5px solid red';
-      //   });
-      //   `;
 
       iframeElement.contentWindow.postMessage(
         customScript,
@@ -51,14 +49,11 @@ function App() {
 
   useEffect(() => {
     window.addEventListener('message', event => {
-      console.log;
-      // console.log('event', typeof event.data, event.data);
-
       if (typeof event.data === 'string' && event.data.includes('datajson')) {
         const { data } = event;
 
-        console.log('event', data.replace('datajson', ''));
         const map: Record<string, string> = {};
+
         const scenes = JSON.parse(data.replace('datajson', ''));
 
         scenes.forEach((item: any) => {
